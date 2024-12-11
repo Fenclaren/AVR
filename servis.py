@@ -1,18 +1,24 @@
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from flask import Flask, request, jsonify
 
-class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)  # HTTP статус 200 (OK)
-        self.send_header("Content-Type", "text/plain; charset=utf-8")
-        self.end_headers()
-        self.wfile.write(b"Hello, world!")  # Ответ в теле сообщения
+app = Flask(__name__)
 
-# Указываем адрес и порт для сервера
-host = ("localhost", 8080)
+# Пример маршрута для приветствия
+@app.route('/greet', methods=['GET'])
+def greet():
+    name = request.args.get('name', 'Client')  # Получаем параметр 'name' из строки запроса
+    return jsonify({"message": f"Hello, {name}!"})
 
-# Создаем сервер
-httpd = HTTPServer(host, SimpleHTTPRequestHandler)
-print(f"Сервер запущен на http://{host[0]}:{host[1]}")
+# Пример маршрута для выполнения действия
+@app.route('/action', methods=['POST'])
+def action():
+    data = request.get_json()  # Получаем JSON из тела запроса
+    if not data or 'action' not in data:
+        return jsonify({"error": "Invalid request, 'action' is required"}), 400
 
-# Запускаем сервер
-httpd.serve_forever()
+    if data['action'] == 'ping':
+        return jsonify({"status": "success", "response": "pong"})
+    else:
+        return jsonify({"error": "Unknown action"}), 400
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000, debug=True)
