@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-# Пример маршрута для приветствия
 @app.route('/greet', methods=['GET'])
 def greet():
     name = request.args.get('name', 'Client')  # Получаем параметр 'name' из строки запроса
