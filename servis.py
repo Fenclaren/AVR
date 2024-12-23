@@ -7,7 +7,7 @@ def greet():
     name = request.args.get('name', 'Client')  # Получаем параметр 'name' из строки запроса
     return jsonify({"message": f"Hello, {name}!"})
 
-# Пример маршрута для выполнения действия
+
 @app.route('/action', methods=['POST'])
 def action():
     data = request.get_json()  # Получаем JSON из тела запроса
@@ -20,4 +20,4 @@ def action():
         return jsonify({"error": "Unknown action"}), 400
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    app.run(host='0.0.0.0', port=8001, debug=True)
